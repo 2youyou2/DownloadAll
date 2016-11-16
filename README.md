@@ -1,3 +1,3 @@
-# Console
+# Download All
 
-Console Window for Editor Framework
+Download all files loaded by current page
