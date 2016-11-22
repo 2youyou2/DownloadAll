@@ -24,9 +24,12 @@
     "min-width": 500,
     "profiles": {
       "local": {
-        "url": "",
+        "url": "http://baidu.com/",
         "dest": ""
       }
     }
+  },
+  "dependencies": {
+    "decodeurl": "0.0.8"
   }
 }
