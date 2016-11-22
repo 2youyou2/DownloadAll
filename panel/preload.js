@@ -1,9 +1,7 @@
 (function () {
     'use strict';
 
-    var localRequire = require;
-
-    var Electron = localRequire('electron');
+    var Electron = require('electron');
     var IpcRenderer = Electron.ipcRenderer;
 
     IpcRenderer.on('get-entries', function() {

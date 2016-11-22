@@ -50,7 +50,7 @@ let style = `
 let template = `
   <div id="content" class="flex layout vertical">
     <div class="layout horizontal center">
-        <ui-input class="flex-3" v-value="data.url"></ui-input>
+        <ui-input class="flex-3" v-value="data.url" placeholder="http://baidu.com/"></ui-input>
         <div class="flex-1 layout horizontal">
           <ui-button
             class="flex"
@@ -71,7 +71,7 @@ let template = `
           </ui-button>
         </div>
     </div>
-    <webview id="view" class="flex" :src="[[data.url]]"></webview>
+    <webview id="view" class="flex" v-bind:src="data.url" nodeintegration disablewebsecurity></webview>
 
     <div id="progress-wrapper" class="layout vertical center center-justified fit" v-if="downloading">
       <div>{{downloadingItem}}</div>
@@ -91,12 +91,16 @@ Editor.Panel.extend({
 
   ready () {
     let view = this.view = this.queryID('view');
-    view.preload = Editor.url('app://builtin/da/panel/preload.js');
+    view.preload = Editor.url('app://builtin/DownloadAll/panel/preload.js');
     view.addEventListener('ipc-message', event => {
       this[event.channel].apply(this, event.args);
     });
+    view.addEventListener('dom-ready', () => {
+      // view.openDevTools();
+    });
 
     let profilesLocal = this.profiles.local;
+    let data = profilesLocal.data;
 
     let vm = this._vm = new window.Vue({
       el: this.shadowRoot,
@@ -105,14 +109,14 @@ Editor.Panel.extend({
         downloading: false,
         downloadingItem: '',
 
-        data: profilesLocal,
+        data: data,
       },
 
       watch: {
         data: {
           handler (val) {
             if (!profilesLocal.save) return;
-            deepCopyObject(val, profilesLocal, ['save']);
+            deepCopyObject(val, profilesLocal.data, ['save']);
             profilesLocal.save();
           },
           deep: true
@@ -128,7 +132,7 @@ Editor.Panel.extend({
           event.stopPropagation();
 
           let res = Editor.Dialog.openFile({
-              defaultPath: profilesLocal.dest,
+              defaultPath: data.dest,
               properties: ['openDirectory']
           });
 
@@ -140,7 +144,7 @@ Editor.Panel.extend({
         _onShowInFinder (event) {
           event.stopPropagation();
 
-          let dest = profilesLocal.dest;
+          let dest = data.dest;
 
           if (!Fs.existsSync(dest)) {
               Editor.warn('%s not exists!', dest);
@@ -149,13 +153,7 @@ Editor.Panel.extend({
 
           Electron.shell.showItemInFolder(dest);
           Electron.shell.beep();
-        },
-
-        _localProfileChanged () {
-          if ( profilesLocal.save ) {
-            profilesLocal.save();
-          }
-        },
+        }
       }
     });
 
@@ -163,7 +161,7 @@ Editor.Panel.extend({
   },
 
   'reply-get-entries' (entries) {
-    let profiles = this.profiles.local;
+    let data = this.profiles.local.data;
     let view = this.view;
     let url = Url.parse(view.src);
 
@@ -186,7 +184,7 @@ Editor.Panel.extend({
 
       let path = entryUrl.pathname;
       path = DecodeUrl(path);
-      path = Path.join(profiles.dest, entryUrl.host, path);
+      path = Path.join(data.dest, entryUrl.host, path);
       Fs.ensureDirSync(Path.dirname(path));
       
       try {
