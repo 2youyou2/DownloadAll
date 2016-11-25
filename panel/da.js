@@ -5,8 +5,9 @@ const Fs = require('fire-fs');
 const Path = require('fire-path');
 const Electron = require('electron');
 const Url = require('url');
-const DecodeUrl = require('decodeurl');
 const Async = require('async');
+
+const DecodeUrl = require(Editor.url('packages://download-all/node_modules/decodeurl/decodeurl.js'));
 
 function deepCopyObject (source, dist, excludes) {
     dist = dist || {};
@@ -91,7 +92,7 @@ Editor.Panel.extend({
 
   ready () {
     let view = this.view = this.queryID('view');
-    view.preload = Editor.url('app://builtin/DownloadAll/panel/preload.js');
+    view.preload = Editor.url('app://builtin/download-all/panel/preload.js');
     view.addEventListener('ipc-message', event => {
       this[event.channel].apply(this, event.args);
     });

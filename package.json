@@ -1,8 +1,8 @@
 {
-  "name": "da",
+  "name": "download-all",
   "version": "0.0.1",
   "description": "Download all files loaded by current page",
-  "author": "Firebox Technology",
+  "author": "2youyou2",
   "packages": {
     "ui-kit": "^0.1.0"
   },
@@ -10,7 +10,7 @@
   "main-menu": {
     "i18n:MAIN_MENU.panel.title/Download All": {
       "icon": "panel/icon.png",
-      "message": "da:open"
+      "message": "download-all:open"
     }
   },
   "panel": {

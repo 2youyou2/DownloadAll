@@ -11,7 +11,7 @@ module.exports = {
 
   messages: {
     'open' () {
-      Editor.Panel.open('da');
+      Editor.Panel.open('download-all');
     }
   }
 };
