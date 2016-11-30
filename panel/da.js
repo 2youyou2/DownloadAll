@@ -186,9 +186,13 @@ Editor.Panel.extend({
       let path = entryUrl.pathname;
       path = DecodeUrl(path);
       path = Path.join(data.dest, entryUrl.host, path);
-      Fs.ensureDirSync(Path.dirname(path));
       
+      if (path[path.length-1] === '/') {
+        path = Path.join(path, 'index.html');
+      }
+
       try {
+        Fs.ensureDirSync(Path.dirname(path));
         Fs.ensureFileSync(path);
       }
       catch (err) {
@@ -197,10 +201,6 @@ Editor.Panel.extend({
         this._vm.downloadProgress = downloaded / total;
         done();
         return;
-      }
-
-      if (Fs.isDirSync(path)) {
-        path = Path.join(path, 'index.html');
       }
 
       Request(entryUrl.href, (err) => {
