@@ -4,6 +4,11 @@ const Electron = require('electron');
 
 module.exports = {
   load () {
+    Editor.Metrics.trackEvent({
+        category: 'Packages',
+        label: 'download-all',
+        action: 'Load package'
+    }, null);
   },
 
   unload () {
@@ -12,6 +17,12 @@ module.exports = {
   messages: {
     'open' () {
       Editor.Panel.open('download-all');
+      
+      Editor.Metrics.trackEvent({
+        category: 'Packages',
+        label: 'download-all',
+        action: 'Panel Open'
+      }, null);
     }
   }
 };

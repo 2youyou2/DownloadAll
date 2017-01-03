@@ -8,8 +8,7 @@
   },
   "main": "main.js",
   "main-menu": {
-    "i18n:MAIN_MENU.panel.title/Download All": {
-      "icon": "panel/icon.png",
+    "i18n:MAIN_MENU.package.title/download-all/open": {
       "message": "download-all:open"
     }
   },
