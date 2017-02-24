@@ -72,7 +72,7 @@ let template = `
           </ui-button>
         </div>
     </div>
-    <webview id="view" class="flex" v-bind:src="data.url" nodeintegration disablewebsecurity></webview>
+    <webview id="view" class="flex" v-bind:src="data.url" disablewebsecurity></webview>
 
     <div id="progress-wrapper" class="layout vertical center center-justified fit" v-if="downloading">
       <div>{{downloadingItem}}</div>
@@ -92,7 +92,7 @@ Editor.Panel.extend({
 
   ready () {
     let view = this.view = this.queryID('view');
-    view.preload = Editor.url('app://builtin/download-all/panel/preload.js');
+    view.preload = Editor.url('packages://download-all/panel/preload.js');
     view.addEventListener('ipc-message', event => {
       this[event.channel].apply(this, event.args);
     });
@@ -193,6 +193,11 @@ Editor.Panel.extend({
 
       try {
         Fs.ensureDirSync(Path.dirname(path));
+
+        if (Fs.isDirSync(path)) {
+          return done();
+        }
+
         Fs.ensureFileSync(path);
       }
       catch (err) {
